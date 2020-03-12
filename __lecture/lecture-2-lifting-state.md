@@ -17,7 +17,7 @@ Sometimes, you'll want to share data with a sibling component.
 <img src="./assets/search-app-filled.png" />
 
 ---
-
+ORIGINAL
 ```js
 const App = () => {
   return (
@@ -30,6 +30,40 @@ const App = () => {
 
 const Header = () => {
   const [searchTerm, setSearchTerm] = React.useState('');
+
+  return (
+    <header>
+      <Logo />
+      <SearchInput value={searchTerm} onChange={setSearchTerm} />
+    </header>
+  );
+};
+
+const MainContent = () => {
+  return (
+    <main>
+      {/* how do I access `searchTerm`? */}
+      Search results for {searchTerm}
+    </main>
+  );
+};
+```
+
+MINE: 
+
+```js
+const App = () => {
+    const [searchTerm, setSearchTerm] = React.useState('');
+
+  return (
+    <>
+      <Header searchTerm={searchTerm} setSearchTerm = {setSearchTerm} />
+      <MainContent searchTerm={searchTerm} />
+    </>
+  );
+};
+
+const Header = ({searchTerm, setSearchTerm}) => {
 
   return (
     <header>

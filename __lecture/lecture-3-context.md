@@ -28,24 +28,24 @@ const App = () => {
   );
 };
 
-const Home = () => {
+const Home = ({user}) => {
   return (
     <>
-      <Header />
+      <Header user={user}/>
       <MainContent />
     </>
   );
 };
 
-const Header = () => {
+const Header = ({user}) => {
   return (
     <header>
-      <Navigation />
+      <Navigation user={user} />
     </header>
   );
 };
 
-const Navigation = () => {
+const Navigation = ({user}) => {
   return (
     <nav>
       <ul>
@@ -58,7 +58,7 @@ const Navigation = () => {
           </li>
         ) : (
           <li>
-            <LoginDialogTrigger />
+            <LoginDialogTrigger user={user}/>
           </li>
         )}
       </ul>
@@ -66,7 +66,7 @@ const Navigation = () => {
   );
 };
 
-const LoginDialogTrigger = () => {
+const LoginDialogTrigger = ({user}) => {
   // Some stuff to show a button and handle showing
   // the dialog on click
 
@@ -112,7 +112,8 @@ export const UserContext = React.createContext(null);
 
 const App = () => {
   return (
-    <UserContext.Provider value={{ username: 'Alfalfa' }}>
+    <UserContext.Provider value={{ username: 'Alfalfa' }}> 
+    // everything below will be able to access the value
       <Header />
       <Main>
         <YourAppHere />
@@ -147,6 +148,7 @@ const Profile = () => {
 Update the following components to use context
 
 ---
+ORIGINAL
 
 ```jsx
 const App = () => {
@@ -193,7 +195,66 @@ const Navigation = ({ user, setUser }) => {
 };
 ```
 
+MINE
+
+```jsx
+export const UserContext = React.createContext(null);
+const App = () => {
+  const [user, setUser] = React.useState({ username: 'Alfalfa' });
+  return (
+    <userContext.Provider value={{user, setUser}}>
+      <Home/>;
+    <userContext.Provider>
+  )
+};
+
+const Home = () => {
+  return (
+    <>
+      <Header />
+      <MainContent />
+    </>
+  );
+};
+
+const Header = () => {
+  return (
+    <header>
+      <Navigation  />
+    </header>
+  );
+};
+
+const Navigation = () => {
+
+import [user, setUser] from '../App';
+const {user, setUser} = React.useContext([user, setUser]);
+
+
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/">Home</Link>
+        </li>
+        <li>
+          <Link to="/about">About</Link>
+        </li>
+        {user && (
+          <li>
+            <button onClick={() => setUser(null)}>Log out</button>
+          </li>
+        )}
+      </ul>
+    </nav>
+  );
+};
+```
+
 ---
+
+NEW EX 
+ORIGINA
 
 ```jsx
 const App = () => {
@@ -221,6 +282,44 @@ const MainContent = ({ dialog, setDialog }) => {
 };
 
 const Dialog = ({ currentDialog }) => {
+  if (!currentDialog) {
+    return null;
+  }
+
+  return <div>{/* Do stuff with currentDialog */}</div>;
+};
+```
+
+```jsx
+const App = () => {
+  const [dialog, setDialog] = React.useState(null);
+
+  return (
+    <>
+    <dialogContext.Provder value={{dialog,setDialog}}>
+      <MainContent dialog={dialog} setDialog={setDialog} />
+      <Dialog currentDialog={dialog} />
+    </dialogContext.Provder>
+  );
+};
+
+const MainContent = () => {
+  const {setDialog} = usecontext(DialogContext);
+  return (
+    <>
+      <Sidebar>
+        <Link>Home</Link>
+        <Link>About</Link>
+        <LogInButton afterLogin={() => setDialog('login-success')} />
+      </Sidebar>
+      <Main>Stuff</Main>
+    </>
+  );
+};
+
+const Dialog = () => {
+    const currentDialog = usecontext(DialogContext).dialog
+
   if (!currentDialog) {
     return null;
   }

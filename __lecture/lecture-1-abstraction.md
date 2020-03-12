@@ -119,7 +119,7 @@ const Banner = ({ type, message, user }) => {
 ```
 
 ---
-
+ORIGINAL
 ```js
 const ContactPage = () => {
   const [message, setMessage] = React.useState('');
